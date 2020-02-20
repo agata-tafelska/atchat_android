@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ATChat</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_host">Host</string>
+    <string name="prompt_username">Username</string>
+    <string name="action_join_chat">Join chat!</string>
+</resources>
