@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.atchat";
+option java_outer_classname = "ChatProto";
+
+package chat;
+
+message User {
+    string name = 1;
+}
+
+message Message {
+    User user = 1;
+    string text = 2;
+    int64 timestamp = 3;
+}
+
+message Chat {
+    repeated Message messages = 1;
+    repeated User user = 2;
+}
+
+message CurrentUsers {
+    repeated User users = 1;
+}
+
+service ChatService {
+    rpc getChat(User) returns (Chat);
+    rpc unsubscribe(User) returns (User);
+    rpc sendMessage(Message) returns (Message);
+    rpc observeMessages(User) returns (stream Message);
+    rpc observeUsers(User) returns (stream CurrentUsers);
+}
