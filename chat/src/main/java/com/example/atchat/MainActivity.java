@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextHost;
     private EditText editTextUsername;
     private Button buttonJoinChat;
+    private ActivitiesCoordinator coordinator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +30,14 @@ public class MainActivity extends AppCompatActivity {
         editTextUsername.addTextChangedListener(loginTextWatcher);
         editTextHost.addTextChangedListener(loginTextWatcher);
 
+        coordinator = ActivitiesCoordinator.getInstance();
+
         buttonJoinChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String host = editTextHost.getText().toString();
                 String username = editTextUsername.getText().toString();
+                coordinator.joinChat(host, username, MainActivity.this);
             }
         });
 
@@ -57,5 +61,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
 
 }
