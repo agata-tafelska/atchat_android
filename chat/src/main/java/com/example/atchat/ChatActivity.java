@@ -2,6 +2,9 @@ package com.example.atchat;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +25,9 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MessagesAdapter adapter;
 
-    private TextView textView;
+    private Button sendMessageButton;
+    private EditText messageEditText;
+
 
     @SuppressWarnings("unchecked")
     private Observer messagesObserver =
@@ -42,6 +47,20 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        coordinator = ActivitiesCoordinator.getInstance();
+        coordinator.observeChat(messagesObserver);
+
+        sendMessageButton = findViewById(R.id.send_message_button);
+        messageEditText = findViewById(R.id.message_edit_text);
+
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String message = messageEditText.getText().toString();
+                coordinator.sendMessage(message);
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.chat_recyclerview);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -50,11 +69,6 @@ public class ChatActivity extends AppCompatActivity {
 
         adapter = new MessagesAdapter();
         recyclerView.setAdapter(adapter);
-
-        coordinator = ActivitiesCoordinator.getInstance();
-        coordinator.observeChat(messagesObserver);
-
-        coordinator.printMessages();
     }
 
     private void updateUsers(List<User> messages) {
@@ -72,7 +86,13 @@ public class ChatActivity extends AppCompatActivity {
                         "[" + dateString + "] " + message.getUser().getName() + ": " + message.getText();
                 messagesListToDisplay.add(messageString);
             }
-            adapter.setMessages(messagesListToDisplay);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.setMessages(messagesListToDisplay);
+                }
+            });
+
         }
     }
 }
