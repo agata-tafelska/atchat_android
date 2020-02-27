@@ -35,6 +35,18 @@ public class ActivitiesCoordinator {
             messagesObservable.addMessage(value);
         }
     };
+    private StreamObserver<CurrentUsers> usersStreamObserver = new DefaultStreamObserver<CurrentUsers>() {
+        @Override
+        public void onNext(CurrentUsers value) {
+            /*
+             Set connection lost countdown to 5 seconds
+             Client expects next update in no more that this time
+             In case of timeout, lost connection error will be shown
+             */
+//            connectionLostDelayedTask.delayExecution(5);
+            usersObservable.updateUsers(value.getUsersList());
+        }
+    };
 
     public void joinChat(String host, String username, final Context context) {
 
@@ -49,6 +61,7 @@ public class ActivitiesCoordinator {
                 context.startActivity(intentToStartChatActivity);
 
                 chatService.observeMessages(currentUser, messageStreamObserver);
+                chatService.observeUsers(currentUser, usersStreamObserver);
             }
 
             @Override
@@ -102,12 +115,12 @@ public class ActivitiesCoordinator {
 
     }
 
-    public void observeChat(Observer messagesObserver) {
-//        usersObservable.addObserver(usersObserver);
+    public void observeChat(Observer messagesObserver, Observer usersObserver) {
+        usersObservable.addObserver(usersObserver);
         messagesObservable.addObserver(messagesObserver);
 //        Log.d(TAG, "observe chat messages: " + messagesObservable.getMessages().toString());
 
-//        usersObservable.notifyObservers();
+        usersObservable.notifyObservers();
         messagesObservable.notifyObservers();
     }
 }

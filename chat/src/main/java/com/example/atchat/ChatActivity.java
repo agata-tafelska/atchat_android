@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,9 +24,24 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MessagesAdapter adapter;
 
+    private Button showUsersButton;
     private Button sendMessageButton;
     private EditText messageEditText;
 
+    private UsersBottomSheetDialog bottomSheet;
+
+    @SuppressWarnings("unchecked")
+    private Observer usersObserver =
+            (observable, argument) -> {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(TAG, "updating users in new thread");
+                        List users = ((List) argument);
+                        updateUsers(users);
+                    }
+                }).start();
+            };
 
     @SuppressWarnings("unchecked")
     private Observer messagesObserver =
@@ -47,31 +61,48 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        coordinator = ActivitiesCoordinator.getInstance();
-        coordinator.observeChat(messagesObserver);
+        bottomSheet = new UsersBottomSheetDialog();
 
+        coordinator = ActivitiesCoordinator.getInstance();
+        coordinator.observeChat(messagesObserver, usersObserver);
+
+        showUsersButton = findViewById(R.id.show_users_button);
         sendMessageButton = findViewById(R.id.send_message_button);
         messageEditText = findViewById(R.id.message_edit_text);
+
+        showUsersButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheet.show(getSupportFragmentManager(), null);
+                Log.d(TAG, "showUsersButton onClicked called");
+            }
+        });
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String message = messageEditText.getText().toString();
                 coordinator.sendMessage(message);
+                messageEditText.setText("");
             }
         });
 
         recyclerView = (RecyclerView) findViewById(R.id.chat_recyclerview);
         LinearLayoutManager layoutManager
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        // COMPLETED (41) Set the layoutManager on mRecyclerView
         recyclerView.setLayoutManager(layoutManager);
 
         adapter = new MessagesAdapter();
         recyclerView.setAdapter(adapter);
     }
 
-    private void updateUsers(List<User> messages) {
+    private void updateUsers(List<User> users) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bottomSheet.setUsers(users);
+            }
+        });
 
     }
 
