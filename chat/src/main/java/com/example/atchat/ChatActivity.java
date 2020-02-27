@@ -90,6 +90,8 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     adapter.setMessages(messagesListToDisplay);
+                    int itemCount = adapter.getItemCount();
+                    recyclerView.scrollToPosition(itemCount - 1);
                 }
             });
 
