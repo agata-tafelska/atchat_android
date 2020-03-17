@@ -1,6 +1,7 @@
 package com.example.atchat;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,15 @@ import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHolder> {
 
-    public MessagesAdapter() {
+    private static final String TAG = MessagesAdapter.class.getSimpleName();
 
+    private static int TYPE_MY_USER = 1;
+    private static int TYPE_OTHER_USERS = 2;
+
+    private String loggedUser;
+
+    public MessagesAdapter(String loggedUser) {
+        this.loggedUser = loggedUser;
     }
 
     private List<MessageText> chatMessages;
@@ -38,13 +46,33 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             messageTextView = (TextView) itemView.findViewById(R.id.message_text_view_message);
         }
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        Log.d(TAG, "Logged user name: " + loggedUser);
+        if (chatMessages.get(position).getUser().equals("~" + loggedUser)) {
+            Log.d(TAG, "getItemViewType: TYPE_MY_USER");
+            return TYPE_MY_USER;
+        } else {
+            Log.d(TAG, "getItemViewType: TYPE_OTHER_USERS");
+            return TYPE_OTHER_USERS;
+        }
+    }
+
     @NonNull
     @Override
     public MessagesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
+        View messageView;
 
-        View messageView = inflater.inflate(R.layout.messages_list_item, parent, false);
+        if (viewType == TYPE_MY_USER) {
+            Log.d(TAG, "Type: My user" );
+            messageView = inflater.inflate(R.layout.messages_list_item_my_user, parent, false);
+        } else {
+            Log.d(TAG, "Type: Other users" );
+            messageView = inflater.inflate(R.layout.messages_list_item_other_users, parent, false);
+        }
 
         ViewHolder viewHolder = new ViewHolder(messageView);
         return viewHolder;

@@ -58,6 +58,7 @@ public class ActivitiesCoordinator {
             public void onNext(Chat value) {
                 messagesObservable.setMessages(new ArrayList<>(value.getMessagesList()));
                 Intent intentToStartChatActivity = new Intent(context, ChatActivity.class);
+                intentToStartChatActivity.putExtra("USER_NAME", currentUser.getName());
                 context.startActivity(intentToStartChatActivity);
 
                 chatService.observeMessages(currentUser, messageStreamObserver);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -15,30 +16,45 @@
         android:id="@+id/chat_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"/>
+        android:layout_weight="15"/>
 
-    <EditText
-        android:id="@+id/message_edit_text"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:inputType="textCapSentences|textMultiLine"
-        android:maxLength="500"
-        android:maxLines="4"
-        android:overScrollMode="always"
-        android:scrollbarStyle="insideInset"
-        android:scrollbars="vertical"
-        android:background="@color/colorPrimaryLight"
-        android:hint="@string/prompt_type_message"
-        android:selectAllOnFocus="true" />
+        android:layout_weight="1">
 
-    <Button
-        android:id="@+id/send_message_button"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:text="@string/action_send_message"
-        android:layout_gravity="end"/>
+        <EditText
+            android:id="@+id/message_edit_text"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:background="@drawable/edit_text"
+            android:hint="@string/prompt_type_message"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLength="500"
+            android:maxLines="4"
+            android:overScrollMode="always"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="8dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:selectAllOnFocus="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_message_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/send_message_button"
+            android:background="@drawable/send_message_button"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:text="@string/action_send_message"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

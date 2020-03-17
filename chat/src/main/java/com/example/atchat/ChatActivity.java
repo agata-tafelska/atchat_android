@@ -1,5 +1,6 @@
 package com.example.atchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +30,8 @@ public class ChatActivity extends AppCompatActivity {
     private EditText messageEditText;
 
     private UsersBottomSheetDialog bottomSheet;
+
+    private String loggedUserName;
 
     @SuppressWarnings("unchecked")
     private Observer usersObserver =
@@ -70,6 +73,9 @@ public class ChatActivity extends AppCompatActivity {
         sendMessageButton = findViewById(R.id.send_message_button);
         messageEditText = findViewById(R.id.message_edit_text);
 
+        loggedUserName = getIntent().getExtras().get("USER_NAME").toString();
+        Log.d(TAG, "Logged user name: " + loggedUserName);
+
         showUsersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +98,7 @@ public class ChatActivity extends AppCompatActivity {
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new MessagesAdapter();
+        adapter = new MessagesAdapter(loggedUserName);
         recyclerView.setAdapter(adapter);
     }
 
@@ -107,15 +113,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateMessages(List<Message> messages) {
-        List<String> messagesListToDisplay = new ArrayList<>();
+        List<MessageText> messagesListToDisplay = new ArrayList<>();
         if (messages != null) {
             for (Message message : messages) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = format.format(new Date(message.getTimestamp()));
-
-                String messageString =
-                        "[" + dateString + "] " + message.getUser().getName() + ": " + message.getText();
-                messagesListToDisplay.add(messageString);
+                String userString = "~" + message.getUser().getName();
+                String messageString = message.getText();
+                MessageText messageText = new MessageText(dateString, userString, messageString);
+                messagesListToDisplay.add(messageText);
             }
             runOnUiThread(new Runnable() {
                 @Override
