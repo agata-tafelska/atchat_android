@@ -17,11 +17,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
     }
 
-    private List<String> chatMessages;
+    private List<MessageText> chatMessages;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
+        private TextView dateTextView;
+        private TextView userTextView;
         private TextView messageTextView;
 
         // We also create a constructor that accepts the entire item row
@@ -31,7 +33,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
             // to access the context from any ViewHolder instance.
             super(itemView);
 
-            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
+            dateTextView = (TextView) itemView.findViewById(R.id.message_text_view_date);
+            userTextView = (TextView) itemView.findViewById(R.id.message_text_view_user);
+            messageTextView = (TextView) itemView.findViewById(R.id.message_text_view_message);
         }
     }
     @NonNull
@@ -48,8 +52,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MessagesAdapter.ViewHolder holder, int position) {
-        String message = chatMessages.get(position);
-        holder.messageTextView.setText(message);
+        String messageDate = chatMessages.get(position).getDate();
+        String messageUser = chatMessages.get(position).getUser();
+        String messageText = chatMessages.get(position).getMessage();
+        holder.dateTextView.setText(messageDate);
+        holder.userTextView.setText(messageUser);
+        holder.messageTextView.setText(messageText);
     }
 
     @Override
@@ -58,7 +66,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         return chatMessages.size();
     }
 
-    public void setMessages (List<String> messages) {
+    public void setMessages (List<MessageText> messages) {
         chatMessages = messages;
         notifyDataSetChanged();
     }
