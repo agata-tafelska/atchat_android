@@ -2,11 +2,17 @@ package com.example.atchat;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +31,6 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MessagesAdapter adapter;
 
-    private Button showUsersButton;
     private Button sendMessageButton;
     private EditText messageEditText;
 
@@ -69,20 +74,12 @@ public class ChatActivity extends AppCompatActivity {
         coordinator = ActivitiesCoordinator.getInstance();
         coordinator.observeChat(messagesObserver, usersObserver);
 
-        showUsersButton = findViewById(R.id.show_users_button);
         sendMessageButton = findViewById(R.id.send_message_button);
         messageEditText = findViewById(R.id.message_edit_text);
+        messageEditText.addTextChangedListener(messageTextWatcher);
 
         loggedUserName = getIntent().getExtras().get("USER_NAME").toString();
         Log.d(TAG, "Logged user name: " + loggedUserName);
-
-        showUsersButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheet.show(getSupportFragmentManager(), null);
-                Log.d(TAG, "showUsersButton onClicked called");
-            }
-        });
 
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +98,44 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new MessagesAdapter(loggedUserName);
         recyclerView.setAdapter(adapter);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.chat_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_show_users) {
+            bottomSheet.show(getSupportFragmentManager(), null);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private TextWatcher messageTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String messageString = messageEditText.getText().toString().trim();
+            sendMessageButton.setEnabled(!messageString.isEmpty());
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     private void updateUsers(List<User> users) {
         runOnUiThread(new Runnable() {
