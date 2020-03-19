@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.util.Log;
 
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.Observer;
 
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
-public class ActivitiesCoordinator {
+public class    ActivitiesCoordinator {
 
     private static final String TAG = ActivitiesCoordinator.class.getSimpleName();
 
@@ -68,17 +70,18 @@ public class ActivitiesCoordinator {
             @Override
             public void onError(Throwable throwable) {
 
-//                if (throwable instanceof StatusRuntimeException) {
-//                    StatusRuntimeException exception = (StatusRuntimeException) throwable;
-//                    switch (exception.getStatus().getCode()) {
-//                        case UNAVAILABLE:
-//                            showError(ERROR_SERVICE_UNAVAILABLE, null);
-//                            return;
-//                        case ALREADY_EXISTS:
-//                            showError(null, ERROR_DUPLICATED_USER);
-//                            return;
-//                    }
-//                }
+                if (throwable instanceof StatusRuntimeException) {
+                    StatusRuntimeException exception = (StatusRuntimeException) throwable;
+                    switch (exception.getStatus().getCode()) {
+                        case UNAVAILABLE:
+                            EventBus.getDefault().post(new ErrorEvent("Unable to connect to provided host. Make sure entered host is correct."));
+                            Log.d(TAG, "Timeout");
+                            return;
+                        case ALREADY_EXISTS:
+                            EventBus.getDefault().post(new ErrorEvent("Username already exists. Please try again."));
+                            return;
+                    }
+                }
 //                showError(null, ERROR_UNKNOWN);
             }
 

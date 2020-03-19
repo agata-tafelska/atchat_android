@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -73,6 +76,18 @@ public class MainActivity extends AppCompatActivity {
         textViewErrorMessage.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
     private TextWatcher loginTextWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -97,6 +112,16 @@ public class MainActivity extends AppCompatActivity {
         editTextHost.setVisibility(View.INVISIBLE);
         editTextUsername.setVisibility(View.INVISIBLE);
         buttonJoinChat.setVisibility(View.INVISIBLE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onErrorEvent(ErrorEvent event) {
+        showErrorMessage(event.message);
+    }
+
+    private void showErrorMessage(String message) {
+        progressBar.setVisibility(View.INVISIBLE);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
 }
