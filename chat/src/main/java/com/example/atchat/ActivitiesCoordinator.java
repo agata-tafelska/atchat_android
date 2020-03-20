@@ -57,7 +57,7 @@ public class    ActivitiesCoordinator {
         chatService.register(user, new StreamObserver<User>() {
             @Override
             public void onNext(User value) {
-                Intent intentToStartLoginActivity = new Intent(context, MainActivity.class);
+                Intent intentToStartLoginActivity = new Intent(context, LoginActivity.class);
                 context.startActivity(intentToStartLoginActivity);
             }
 
