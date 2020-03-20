@@ -23,10 +23,12 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editTextHost;
     private EditText editTextUsername;
+    private EditText editTextPassword;
     private Button buttonJoinChat;
     private ProgressBar progressBar;
     private TextView textViewErrorMessage;
     private TextView textViewCreateAccount;
+    private TextView textViewCreateAccount1;
 
     private ActivitiesCoordinator coordinator;
 
@@ -41,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
 
         editTextHost = findViewById(R.id.host);
         editTextUsername = findViewById(R.id.username);
-        buttonJoinChat = findViewById(R.id.join_button);
+        editTextPassword = findViewById(R.id.password);
+        buttonJoinChat = findViewById(R.id.sign_in_button);
         progressBar = findViewById(R.id.logging_progress_bar);
         textViewErrorMessage = findViewById(R.id.error_message);
-        textViewCreateAccount = findViewById(R.id.create_account_link);
-        textViewCreateAccount.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewCreateAccount = findViewById(R.id.create_account_text);
+        textViewCreateAccount1 = findViewById(R.id.create_account_link);
 
         editTextUsername.addTextChangedListener(loginTextWatcher);
         editTextHost.addTextChangedListener(loginTextWatcher);
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String host = editTextHost.getText().toString();
                 String username = editTextUsername.getText().toString();
+                String password = editTextPassword.getText().toString();
 
                 if (!InputUtils.isValidHost(host)) {
                     Toast.makeText(MainActivity.this, getApplicationContext().getResources().getString(R.string.incorrect_host_toast_message), Toast.LENGTH_LONG).show();
@@ -65,12 +69,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, getApplicationContext().getResources().getString(R.string.incorrect_username_toast_message), Toast.LENGTH_LONG).show();
                 } else {
                     showLoading();
-                    coordinator.joinChat(host, username, MainActivity.this);
+                    coordinator.joinChat(host, username, password, MainActivity.this);
                 }
             }
         });
 
-        textViewCreateAccount.setOnClickListener(new View.OnClickListener() {
+        textViewCreateAccount1.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewCreateAccount1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
@@ -84,9 +89,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         editTextHost.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);
+        editTextPassword.setVisibility(View.VISIBLE);
         buttonJoinChat.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
         textViewErrorMessage.setVisibility(View.INVISIBLE);
+        textViewCreateAccount.setVisibility(View.VISIBLE);
+        textViewCreateAccount1.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -124,7 +132,10 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         editTextHost.setVisibility(View.INVISIBLE);
         editTextUsername.setVisibility(View.INVISIBLE);
+        editTextPassword.setVisibility(View.INVISIBLE);
         buttonJoinChat.setVisibility(View.INVISIBLE);
+        textViewCreateAccount.setVisibility(View.INVISIBLE);
+        textViewCreateAccount1.setVisibility(View.INVISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -134,7 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void showErrorMessage(String message) {
         progressBar.setVisibility(View.INVISIBLE);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        textViewErrorMessage.setVisibility(View.VISIBLE);
+        textViewErrorMessage.setText(message);
+        editTextHost.setVisibility(View.VISIBLE);
+        editTextUsername.setVisibility(View.VISIBLE);
+        buttonJoinChat.setVisibility(View.VISIBLE);
     }
 
 }

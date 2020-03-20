@@ -57,7 +57,8 @@ public class    ActivitiesCoordinator {
         chatService.register(user, new StreamObserver<User>() {
             @Override
             public void onNext(User value) {
-
+                Intent intentToStartLoginActivity = new Intent(context, MainActivity.class);
+                context.startActivity(intentToStartLoginActivity);
             }
 
             @Override
@@ -81,11 +82,11 @@ public class    ActivitiesCoordinator {
         });
     }
 
-    public void joinChat(String host, String username, final Context context) {
+    public void joinChat(String host, String username, String password, final Context context) {
 
         chatService = new ChatService(host, context);
 
-        currentUser = User.newBuilder().setName(username).build();
+        currentUser = User.newBuilder().setName(username).setPassword(password).build();
         chatService.getChat(currentUser, new StreamObserver<Chat>() {
             @Override
             public void onNext(Chat value) {

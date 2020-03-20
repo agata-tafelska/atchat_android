@@ -3,7 +3,9 @@ package com.example.atchat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +24,12 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText editTextHost;
     private EditText editTextUsername;
     private EditText editTextPassword;
+    private EditText editTextPasswordConfirmation;
     private Button buttonRegister;
+    private TextView signInTextView;
+    private TextView signInTextView2;
+    private TextView errorMessageTextView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +39,12 @@ public class RegisterActivity extends AppCompatActivity {
         editTextHost = findViewById(R.id.register_host);
         editTextUsername = findViewById(R.id.register_username);
         editTextPassword = findViewById(R.id.register_password);
+        editTextPasswordConfirmation = findViewById(R.id.register_password_confirmation);
         buttonRegister = findViewById(R.id.register_button);
+        signInTextView = findViewById(R.id.sign_in_link);
+        signInTextView2 = findViewById(R.id.sign_in_text);
+        errorMessageTextView = findViewById(R.id.error_message);
+        progressBar = findViewById(R.id.register_progress_bar);
 
         coordinator = ActivitiesCoordinator.getInstance();
 
@@ -69,6 +81,16 @@ public class RegisterActivity extends AppCompatActivity {
                     coordinator.registerUser(host, username, password, RegisterActivity.this);
                     showLoading();
                 }
+            }
+        });
+
+        signInTextView.setMovementMethod(LinkMovementMethod.getInstance());
+
+        signInTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
     }
