@@ -8,6 +8,7 @@ package chat;
 
 message User {
     string name = 1;
+    string password = 2;
 }
 
 message Message {
@@ -26,6 +27,7 @@ message CurrentUsers {
 }
 
 service ChatService {
+    rpc register(User) returns (User);
     rpc getChat(User) returns (Chat);
     rpc unsubscribe(User) returns (User);
     rpc sendMessage(Message) returns (Message);

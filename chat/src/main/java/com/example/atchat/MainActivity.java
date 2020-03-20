@@ -1,8 +1,10 @@
 package com.example.atchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonJoinChat;
     private ProgressBar progressBar;
     private TextView textViewErrorMessage;
+    private TextView textViewCreateAccount;
 
     private ActivitiesCoordinator coordinator;
 
@@ -41,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         buttonJoinChat = findViewById(R.id.join_button);
         progressBar = findViewById(R.id.logging_progress_bar);
         textViewErrorMessage = findViewById(R.id.error_message);
+        textViewCreateAccount = findViewById(R.id.create_account_link);
+        textViewCreateAccount.setMovementMethod(LinkMovementMethod.getInstance());
 
         editTextUsername.addTextChangedListener(loginTextWatcher);
         editTextHost.addTextChangedListener(loginTextWatcher);
@@ -62,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                     showLoading();
                     coordinator.joinChat(host, username, MainActivity.this);
                 }
+            }
+        });
+
+        textViewCreateAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
     }

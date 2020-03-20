@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">ATChat</string>
+
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_host">Host</string>
     <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_confirmation">Confirm password</string>
     <string name="action_join_chat">Join chat!</string>
+    <string name="action_register">Register</string>
+    <string name="create_account_link">No account yet? Create one here</string>
+    <string name="sign_in_link">Already have account? Sign in</string>
+
     <string name="prompt_type_message">Type your message here...</string>
     <string name="action_send_message">Send</string>
     <string name="action_show_users">Show active users</string>

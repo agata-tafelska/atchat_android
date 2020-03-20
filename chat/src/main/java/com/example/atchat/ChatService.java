@@ -14,7 +14,7 @@ public class ChatService {
     public ChatService(String host, Context context) {
         this.host = host;
         this.asyncStub = ChatServiceGrpc.newStub(
-                AndroidChannelBuilder.forAddress(host, 9000)
+                AndroidChannelBuilder.forAddress(host, PORT)
                         .usePlaintext()
                         .context(context)
                         .build()
@@ -23,6 +23,10 @@ public class ChatService {
 
     public String getHost() {
         return host;
+    }
+
+    public void register(User request, StreamObserver<User> responseObserver) {
+        asyncStub.register(request, responseObserver);
     }
 
     public void getChat(User request, StreamObserver<Chat> responseObserver) {

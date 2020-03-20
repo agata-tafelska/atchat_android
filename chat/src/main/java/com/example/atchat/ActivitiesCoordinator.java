@@ -50,6 +50,28 @@ public class    ActivitiesCoordinator {
         }
     };
 
+    public void registerUser(String host, String username, String password, final Context context) {
+        chatService = new ChatService(host, context);
+
+        User user = User.newBuilder().setName(username).setPassword(password).build();
+        chatService.register(user, new StreamObserver<User>() {
+            @Override
+            public void onNext(User value) {
+
+            }
+
+            @Override
+            public void onError(Throwable t) {
+
+            }
+
+            @Override
+            public void onCompleted() {
+
+            }
+        });
+    }
+
     public void joinChat(String host, String username, final Context context) {
 
         chatService = new ChatService(host, context);
