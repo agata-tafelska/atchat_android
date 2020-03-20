@@ -2,19 +2,39 @@
     <string name="app_name">ATChat</string>
 
     <string name="title_activity_login">Sign in</string>
+
+    <!-- EditText prompts -->
     <string name="prompt_host">Host</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_confirmation">Confirm password</string>
-    <string name="action_join_chat">Join chat!</string>
-    <string name="action_register">Register</string>
-    <string name="create_account_link">No account yet? Create one here</string>
-    <string name="sign_in_link">Already have account? Sign in</string>
-
     <string name="prompt_type_message">Type your message here...</string>
+
+    <!-- Buttons -->
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_join_as_guest">Join as guest</string>
+    <string name="action_register">Register</string>
     <string name="action_send_message">Send</string>
+
+    <!-- Menu options -->
     <string name="action_show_users">Show active users</string>
+
+    <!-- Redirecting TextViews -->
+    <string name="create_account_part1">No account yet?</string>
+    <string name="create_account_part2">Create one here</string>
+    <string name="sign_in_part1">Already have account?</string>
+    <string name="sign_in_part2">Sign in</string>
+
+    <!-- Toast messages -->
     <string name="incorrect_host_toast_message">Incorrect host. Please try again.</string>
     <string name="incorrect_username_toast_message">Username must contain at least 3 characters including upper- and lowercase, numbers and \".\", \"-\", \"_\".</string>
+    <string name="incorrect_password_toast_message">Password must have at least 8 characters and maximum of 20 characters.</string>
+
+    <!-- Error messages -->
+    <string name="incorrect_credentials_message">Incorrect username or password. Please try again.</string>
+    <string name="different_passwords_message">Passwords do not match. Please try again.</string>
+    <string name="username_exists_message">User with provided username already exists. Please try again.</string>
+    <string name="unknown_error_message">Something went wrong. Please try again.</string>
+    <string name="successfully_created_account_message">Your account was successfully created.</string>
 
 </resources>

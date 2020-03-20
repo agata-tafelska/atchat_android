@@ -6,4 +6,5 @@
     <color name="colorPrimaryLight">#EEEEEE</color>
     <color name="lightBlue">#64b5f6</color>
     <color name="white">#ffffff</color>
+    <color name="successColor">#43a047</color>
 </resources>
