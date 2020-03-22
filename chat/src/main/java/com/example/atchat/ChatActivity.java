@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Observer;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -37,20 +37,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private String loggedUserName;
 
-    @SuppressWarnings("unchecked")
-    private Observer usersObserver =
-            (observable, argument) -> {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "updating users in new thread");
-                        List users = ((List) argument);
-                        updateUsers(users);
-                    }
-                }).start();
-            };
+    private Observer<List<User>> usersLiveDataObserver = users -> {
+        Log.d(TAG, "updating users");
+        updateUsers(users);
+    };
 
-    private androidx.lifecycle.Observer<List<Message>> messagesLiveDataObserver = messages -> {
+    private Observer<List<Message>> messagesLiveDataObserver = messages -> {
         Log.d(TAG, "updating messages");
         updateMessages(messages);
     };
@@ -63,7 +55,7 @@ public class ChatActivity extends AppCompatActivity {
         bottomSheet = new UsersBottomSheetDialog();
 
         coordinator = ActivitiesCoordinator.getInstance();
-        coordinator.observeChat(this, messagesLiveDataObserver, usersObserver);
+        coordinator.observeChat(this, messagesLiveDataObserver, usersLiveDataObserver);
 
         sendMessageButton = findViewById(R.id.send_message_button);
         messageEditText = findViewById(R.id.message_edit_text);
@@ -129,13 +121,7 @@ public class ChatActivity extends AppCompatActivity {
     };
 
     private void updateUsers(List<User> users) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                bottomSheet.setUsers(users);
-            }
-        });
-
+        bottomSheet.setUsers(users);
     }
 
     private void updateMessages(List<Message> messages) {
