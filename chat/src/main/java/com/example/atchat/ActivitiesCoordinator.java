@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.util.Log;
 
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observer;
 
 import io.grpc.StatusRuntimeException;
@@ -28,13 +32,20 @@ public class    ActivitiesCoordinator {
 
     private User currentUser = null;
 
-    private MessagesObservable messagesObservable = new MessagesObservable();
+    private MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
     private UsersObservable usersObservable = new UsersObservable();
 
     private StreamObserver<Message> messageStreamObserver = new DefaultStreamObserver<Message>() {
         @Override
         public void onNext(Message value) {
-            messagesObservable.addMessage(value);
+            Log.d(TAG, "Received new message: " + value.getText());
+            List<Message> currentMessages = messagesLiveData.getValue();
+            if (currentMessages == null) {
+                Log.e(TAG, "Current messages is null. Aborting updates");
+                return;
+            }
+            currentMessages.add(value);
+            messagesLiveData.postValue(currentMessages);
         }
     };
     private StreamObserver<CurrentUsers> usersStreamObserver = new DefaultStreamObserver<CurrentUsers>() {
@@ -90,7 +101,7 @@ public class    ActivitiesCoordinator {
         chatService.getChat(currentUser, new StreamObserver<Chat>() {
             @Override
             public void onNext(Chat value) {
-                messagesObservable.setMessages(new ArrayList<>(value.getMessagesList()));
+                messagesLiveData.postValue(new ArrayList<>(value.getMessagesList()));
                 Intent intentToStartChatActivity = new Intent(context, ChatActivity.class);
                 intentToStartChatActivity.putExtra("USER_NAME", currentUser.getName());
                 context.startActivity(intentToStartChatActivity);
@@ -151,12 +162,11 @@ public class    ActivitiesCoordinator {
 
     }
 
-    public void observeChat(Observer messagesObserver, Observer usersObserver) {
+    public void observeChat(LifecycleOwner lifecycleOwner, androidx.lifecycle.Observer<List<Message>> messagesObserver, Observer usersObserver) {
         usersObservable.addObserver(usersObserver);
-        messagesObservable.addObserver(messagesObserver);
-//        Log.d(TAG, "observe chat messages: " + messagesObservable.getMessages().toString());
+        messagesLiveData.observe(lifecycleOwner, messagesObserver);
+//        Log.d(TAG, "observe chat messages: " + messagesLiveData.getMessages().toString());
 
         usersObservable.notifyObservers();
-        messagesObservable.notifyObservers();
     }
 }
