@@ -50,18 +50,10 @@ public class ChatActivity extends AppCompatActivity {
                 }).start();
             };
 
-    @SuppressWarnings("unchecked")
-    private Observer messagesObserver =
-            (observable, argument) -> {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "updating messages in new thread");
-                        List messages = ((List) argument);
-                        updateMessages(messages);
-                    }
-                }).start();
-            };
+    private androidx.lifecycle.Observer<List<Message>> messagesLiveDataObserver = messages -> {
+        Log.d(TAG, "updating messages");
+        updateMessages(messages);
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +63,7 @@ public class ChatActivity extends AppCompatActivity {
         bottomSheet = new UsersBottomSheetDialog();
 
         coordinator = ActivitiesCoordinator.getInstance();
-        coordinator.observeChat(messagesObserver, usersObserver);
+        coordinator.observeChat(this, messagesLiveDataObserver, usersObserver);
 
         sendMessageButton = findViewById(R.id.send_message_button);
         messageEditText = findViewById(R.id.message_edit_text);
@@ -157,15 +149,9 @@ public class ChatActivity extends AppCompatActivity {
                 MessageText messageText = new MessageText(dateString, userString, messageString);
                 messagesListToDisplay.add(messageText);
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.setMessages(messagesListToDisplay);
-                    int itemCount = adapter.getItemCount();
-                    recyclerView.scrollToPosition(itemCount - 1);
-                }
-            });
-
+            adapter.setMessages(messagesListToDisplay);
+            int itemCount = adapter.getItemCount();
+            recyclerView.scrollToPosition(itemCount - 1);
         }
     }
 }
