@@ -7,12 +7,12 @@ import android.util.Log;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -33,7 +33,7 @@ public class    ActivitiesCoordinator {
     private User currentUser = null;
 
     private MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
-    private UsersObservable usersObservable = new UsersObservable();
+    private MutableLiveData<List<User>> usersLiveData = new MutableLiveData<>();
 
     private StreamObserver<Message> messageStreamObserver = new DefaultStreamObserver<Message>() {
         @Override
@@ -57,7 +57,8 @@ public class    ActivitiesCoordinator {
              In case of timeout, lost connection error will be shown
              */
 //            connectionLostDelayedTask.delayExecution(5);
-            usersObservable.updateUsers(value.getUsersList());
+            Log.d(TAG, "Received current users update, users count: " + value.getUsersList().size());
+            usersLiveData.postValue(value.getUsersList());
         }
     };
 
@@ -162,11 +163,10 @@ public class    ActivitiesCoordinator {
 
     }
 
-    public void observeChat(LifecycleOwner lifecycleOwner, androidx.lifecycle.Observer<List<Message>> messagesObserver, Observer usersObserver) {
-        usersObservable.addObserver(usersObserver);
+    public void observeChat(LifecycleOwner lifecycleOwner,
+                            Observer<List<Message>> messagesObserver,
+                            Observer<List<User>> usersObserver) {
+        usersLiveData.observe(lifecycleOwner, usersObserver);
         messagesLiveData.observe(lifecycleOwner, messagesObserver);
-//        Log.d(TAG, "observe chat messages: " + messagesLiveData.getMessages().toString());
-
-        usersObservable.notifyObservers();
     }
 }
