@@ -32,6 +32,10 @@ public class    ActivitiesCoordinator {
 
     private User currentUser = null;
 
+    private DelayedTask connectionLostDelayedTask = new DelayedTask(() -> {
+        EventBus.getDefault().post(new ConnectionLostEvent("Connection with server lost"));
+    });
+
     private MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
     private MutableLiveData<List<User>> usersLiveData = new MutableLiveData<>();
 
@@ -56,7 +60,8 @@ public class    ActivitiesCoordinator {
              Client expects next update in no more that this time
              In case of timeout, lost connection error will be shown
              */
-//            connectionLostDelayedTask.delayExecution(5);
+            connectionLostDelayedTask.delayExecution(5);
+
             Log.d(TAG, "Received current users update, users count: " + value.getUsersList().size());
             usersLiveData.postValue(value.getUsersList());
         }
@@ -109,6 +114,9 @@ public class    ActivitiesCoordinator {
 
                 chatService.observeMessages(currentUser, messageStreamObserver);
                 chatService.observeUsers(currentUser, usersStreamObserver);
+
+                connectionLostDelayedTask.initialize();
+                Log.d(TAG, "joinChat() -> connectionLostDelayedTask.initialize()");
             }
 
             @Override

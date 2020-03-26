@@ -9,6 +9,7 @@ package chat;
 message User {
     string name = 1;
     string password = 2;
+    bool isGuest = 3;
 }
 
 message Message {
