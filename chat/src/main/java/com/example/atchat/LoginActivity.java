@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -140,13 +141,15 @@ public class LoginActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onErrorEvent(ErrorEvent event) {
-        showErrorMessage(event.message);
+        showErrorMessage(event.errorType.messageResourceId);
     }
 
-    private void showErrorMessage(String message) {
-        progressBar.setVisibility(View.INVISIBLE);
+    private void showErrorMessage(int stringResourceId) {
+        String errorMessage = getString(stringResourceId);
         textViewErrorMessage.setVisibility(View.VISIBLE);
-        textViewErrorMessage.setText(message);
+        textViewErrorMessage.setText(errorMessage);
+
+        progressBar.setVisibility(View.INVISIBLE);
         editTextHost.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);
         buttonJoinChat.setVisibility(View.VISIBLE);

@@ -79,10 +79,10 @@ public class    ActivitiesCoordinator {
                     StatusRuntimeException exception = (StatusRuntimeException) throwable;
                     switch (exception.getStatus().getCode()) {
                         case ALREADY_EXISTS:
-                            EventBus.getDefault().post(new ErrorEvent(context.getString(R.string.username_exists_message)));
+                            EventBus.getDefault().post(new ErrorEvent(ErrorType.ALREADY_EXISTS));
                             return;
                         case UNAUTHENTICATED:
-                            EventBus.getDefault().post(new ErrorEvent(context.getString(R.string.incorrect_credentials_message)));
+                            EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAUTHENTICATED));
                     }
                 }
             }
@@ -118,15 +118,15 @@ public class    ActivitiesCoordinator {
                     StatusRuntimeException exception = (StatusRuntimeException) throwable;
                     switch (exception.getStatus().getCode()) {
                         case UNAVAILABLE:
-                            EventBus.getDefault().post(new ErrorEvent("Unable to connect to provided host. Make sure entered host is correct."));
+                            EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAVAILABLE));
                             Log.d(TAG, "Timeout");
                             return;
                         case UNAUTHENTICATED:
-                            EventBus.getDefault().post(new ErrorEvent(context.getString(R.string.incorrect_credentials_message)));
+                            EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAUTHENTICATED));
                             return;
                     }
                 }
-                EventBus.getDefault().post(new ErrorEvent(context.getString(R.string.unknown_error_message)));
+                EventBus.getDefault().post(new ErrorEvent(ErrorType.UNKNOWN));
             }
 
             @Override

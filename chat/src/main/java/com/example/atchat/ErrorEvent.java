@@ -2,9 +2,9 @@ package com.example.atchat;
 
 public class ErrorEvent {
 
-    public final String message;
+    public ErrorType errorType;
 
-    public ErrorEvent(String message) {
-        this.message = message;
+    public ErrorEvent(ErrorType errorType) {
+        this.errorType = errorType;
     }
 }
