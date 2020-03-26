@@ -1,6 +1,7 @@
 package com.example.atchat;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         String messageDate = chatMessages.get(position).getDate();
         String messageUser = chatMessages.get(position).getUser();
         String messageText = chatMessages.get(position).getMessage();
+        if (messageUser.equals("guest")) {
+            holder.userTextView.setTypeface(null, Typeface.NORMAL);
+        }
         holder.dateTextView.setText(messageDate);
         holder.userTextView.setText(messageUser);
         holder.messageTextView.setText(messageText);

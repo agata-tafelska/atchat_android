@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,6 +22,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 
 public class LoginActivity extends AppCompatActivity {
+
+    public static final String TAG = LoginActivity.class.getSimpleName();
 
     private EditText editTextHost;
     private EditText editTextUsername;
@@ -51,9 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         textViewCreateAccount = findViewById(R.id.create_account_text);
         textViewCreateAccount1 = findViewById(R.id.create_account_link);
 
-        editTextUsername.addTextChangedListener(loginTextWatcher);
-        editTextHost.addTextChangedListener(loginTextWatcher);
-
         coordinator = ActivitiesCoordinator.getInstance();
 
         buttonJoinChat.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, getApplicationContext().getResources().getString(R.string.incorrect_username_toast_message), Toast.LENGTH_LONG).show();
                 } else {
                     showLoading();
-                    coordinator.joinChat(host, username, password, LoginActivity.this);
+                    coordinator.joinChat(host, username, password, false, LoginActivity.this);
                 }
             }
         });
@@ -93,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword.setVisibility(View.VISIBLE);
         buttonJoinChat.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
-        textViewErrorMessage.setVisibility(View.INVISIBLE);
         textViewCreateAccount.setVisibility(View.VISIBLE);
         textViewCreateAccount1.setVisibility(View.VISIBLE);
     }
@@ -144,6 +143,23 @@ public class LoginActivity extends AppCompatActivity {
         showErrorMessage(event.errorType.messageResourceId);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null) {
+            String dataMessage = data.getStringExtra("ERROR_MESSAGE");
+            Log.d(TAG, "onActivityResult called, data: " + dataMessage);
+            textViewErrorMessage.setVisibility(View.VISIBLE);
+            textViewErrorMessage.setText(dataMessage);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onErrorEvent(ErrorEvent event) {
+        showErrorMessage(event.errorType.messageResourceId);
+    }
+
     private void showErrorMessage(int stringResourceId) {
         String errorMessage = getString(stringResourceId);
         textViewErrorMessage.setVisibility(View.VISIBLE);
@@ -152,6 +168,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
         editTextHost.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);
+        editTextPassword.setVisibility(View.VISIBLE);
         buttonJoinChat.setVisibility(View.VISIBLE);
     }
 

@@ -1,5 +1,6 @@
 package com.example.atchat;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,6 +88,18 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.chat_menu, menu);
@@ -100,6 +117,12 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
+        Log.d(TAG, "Back pressed.");
     }
 
     private TextWatcher messageTextWatcher = new TextWatcher() {
@@ -130,7 +153,13 @@ public class ChatActivity extends AppCompatActivity {
             for (Message message : messages) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = format.format(new Date(message.getTimestamp()));
-                String userString = "~" + message.getUser().getName();
+                String userString;
+                if (message.getUser().getIsGuest()) {
+                    userString = message.getUser().getName();
+                }
+                else {
+                    userString = "~" + message.getUser().getName();
+                }
                 String messageString = message.getText();
                 MessageText messageText = new MessageText(dateString, userString, messageString);
                 messagesListToDisplay.add(messageText);

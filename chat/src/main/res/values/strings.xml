@@ -12,9 +12,14 @@
 
     <!-- Buttons -->
     <string name="action_sign_in">Sign in</string>
+    <string name="action_join_chat">Join chat</string>
     <string name="action_join_as_guest">Join as guest</string>
     <string name="action_register">Register</string>
     <string name="action_send_message">Send</string>
+
+    <!-- Guest credentials -->
+    <string name="guest_username">guest</string>
+    <string name="guest_password"></string>
 
     <!-- Menu options -->
     <string name="action_show_users">Show active users</string>

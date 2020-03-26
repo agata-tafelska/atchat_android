@@ -129,11 +129,8 @@ public class RegisterActivity extends AppCompatActivity {
         editTextUsername.setVisibility(View.VISIBLE);
         editTextPassword.setVisibility(View.VISIBLE);
         editTextPasswordConfirmation.setVisibility(View.VISIBLE);
-        errorMessageTextView.setVisibility(View.VISIBLE);
         buttonRegister.setVisibility(View.VISIBLE);
         signInTextView.setVisibility(View.VISIBLE);
         signInTextView2.setVisibility(View.VISIBLE);
-        errorMessageTextView.setVisibility(View.VISIBLE);
-        errorMessageTextView.setText(message);
     }
 }
