@@ -9,10 +9,15 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.example.atchat.Events.ConnectionLostEvent;
+import com.example.atchat.Events.ErrorEvent;
+import com.example.atchat.Events.GetChatSuccessfullyEvent;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
@@ -128,14 +133,16 @@ public class    ActivitiesCoordinator {
                     switch (exception.getStatus().getCode()) {
                         case UNAVAILABLE:
                             EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAVAILABLE));
-                            Log.d(TAG, "Timeout");
+                            Log.d(TAG, "joinChat() -> onError() called, UNAVAILABLE error returned." );
                             return;
                         case UNAUTHENTICATED:
                             EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAUTHENTICATED));
+                            Log.d(TAG, "joinChat() -> onError() called, UNAUTHENTICATED error returned." );
                             return;
                     }
                 }
                 EventBus.getDefault().post(new ErrorEvent(ErrorType.UNKNOWN));
+                Log.d(TAG, "joinChat() -> onError() called, UNKNOWN error returned." );
             }
 
             @Override

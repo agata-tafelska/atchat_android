@@ -1,4 +1,6 @@
-package com.example.atchat;
+package com.example.atchat.Events;
+
+import com.example.atchat.ErrorType;
 
 public class ErrorEvent {
 

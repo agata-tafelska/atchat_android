@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.atchat.Events.ErrorEvent;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -120,10 +122,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onErrorEvent(ErrorEvent event) {
-        showErrorMessage(event.message);
+        showErrorMessage(event.errorType.messageResourceId);
     }
 
-    private void showErrorMessage(String message) {
+    private void showErrorMessage(int stringResourceId) {
+        String errorMessage = getString(stringResourceId);
+        errorMessageTextView.setVisibility(View.VISIBLE);
+        errorMessageTextView.setText(errorMessage);
+
         progressBar.setVisibility(View.INVISIBLE);
         editTextHost.setVisibility(View.VISIBLE);
         editTextUsername.setVisibility(View.VISIBLE);
