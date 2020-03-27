@@ -3,15 +3,16 @@ package com.example.atchat;
 public class MessageText {
 
     private String date;
-    private String user;
+    private String userName;
     private String message;
+    private String userId;
 
     public void setDate(String date) {
         this.date = date;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public void setMessage(String message) {
@@ -22,17 +23,22 @@ public class MessageText {
         return date;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserName() {
+        return userName;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public MessageText(String date, String user, String message) {
+    public String getUserId() {
+        return userId;
+    }
+
+    public MessageText(String date, String userName, String message, String userId) {
         this.date = date;
-        this.user = user;
+        this.userName = userName;
         this.message = message;
+        this.userId = userId;
     }
 }

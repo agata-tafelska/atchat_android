@@ -42,8 +42,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private UsersBottomSheetDialog bottomSheet;
 
-    private String loggedUserName;
-
     private Observer<List<User>> usersLiveDataObserver = users -> {
         Log.d(TAG, "updating users");
         updateUsers(users);
@@ -68,9 +66,6 @@ public class ChatActivity extends AppCompatActivity {
         messageEditText = findViewById(R.id.message_edit_text);
         messageEditText.addTextChangedListener(messageTextWatcher);
 
-        loggedUserName = getIntent().getExtras().get("USER_NAME").toString();
-        Log.d(TAG, "Logged user name: " + loggedUserName);
-
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
                 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new MessagesAdapter(loggedUserName);
+        adapter = new MessagesAdapter(coordinator.getCurrentUser());
         recyclerView.setAdapter(adapter);
     }
 
@@ -150,25 +145,35 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateMessages(List<Message> messages) {
+        adapter.setMessages(createMessageToDisplay(messages));
+        int itemCount = adapter.getItemCount();
+        recyclerView.scrollToPosition(itemCount - 1);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionLostEvent(ConnectionLostEvent event) {
+        Log.d(TAG, "Connection lost, onConnectionLostEvent called.");
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("ERROR_MESSAGE", event.message);
+        setResult(2, returnIntent);
+        finish();
+    }
+
+    private List<MessageText> createMessageToDisplay(List<Message> messages) {
         List<MessageText> messagesListToDisplay = new ArrayList<>();
         if (messages != null) {
             for (Message message : messages) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String dateString = format.format(new Date(message.getTimestamp()));
-                String userString;
-                if (message.getUser().getIsGuest()) {
-                    userString = message.getUser().getName();
-                }
-                else {
-                    userString = "~" + message.getUser().getName();
-                }
+                String username;
+                if (message.getUser().getIsGuest()) username = message.getUser().getName();
+                else username = "~" + message.getUser().getName();
+                String userId = message.getUser().getId();
                 String messageString = message.getText();
-                MessageText messageText = new MessageText(dateString, userString, messageString);
+                MessageText messageText = new MessageText(dateString, username, messageString, userId);
                 messagesListToDisplay.add(messageText);
             }
-            adapter.setMessages(messagesListToDisplay);
-            int itemCount = adapter.getItemCount();
-            recyclerView.scrollToPosition(itemCount - 1);
         }
+        return messagesListToDisplay;
     }
 }

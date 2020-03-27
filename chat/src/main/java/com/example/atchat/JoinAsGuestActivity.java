@@ -1,5 +1,6 @@
 package com.example.atchat;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,7 +9,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.atchat.Events.GetChatSuccessfullyEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,6 +26,7 @@ public class JoinAsGuestActivity extends AppCompatActivity {
 
     private EditText hostEditText;
     private Button joinChatButton;
+    private TextView errorTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,7 @@ public class JoinAsGuestActivity extends AppCompatActivity {
 
         hostEditText = findViewById(R.id.host);
         joinChatButton = findViewById(R.id.join_chat_button);
+        errorTextView = findViewById(R.id.error_message);
 
         joinChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +72,21 @@ public class JoinAsGuestActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (data != null) {
+            String dataMessage = data.getStringExtra("ERROR_MESSAGE");
+            Log.d(TAG, "onActivityResult called, data: " + dataMessage);
+            errorTextView.setVisibility(View.VISIBLE);
+            errorTextView.setText(dataMessage);
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGetChatSuccessfullyEvent(GetChatSuccessfullyEvent event) {
-        String username = event.getUsername();
-        Log.d(TAG, "onGetChatSuccessfullyEvent() called, opening ChatActivity for user " + username);
         Intent intentToStartChatActivity = new Intent(this, ChatActivity.class);
-        intentToStartChatActivity.putExtra("USER_NAME", username);
         startActivityForResult(intentToStartChatActivity, 2);
     }
 

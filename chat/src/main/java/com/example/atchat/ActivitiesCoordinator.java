@@ -37,8 +37,12 @@ public class    ActivitiesCoordinator {
 
     private User currentUser = null;
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+
     private DelayedTask connectionLostDelayedTask = new DelayedTask(() -> {
-        EventBus.getDefault().post(new ConnectionLostEvent("Connection with server lost"));
+        EventBus.getDefault().post(new ConnectionLostEvent("Server connection lost. Please try again"));
     });
 
     private MutableLiveData<List<Message>> messagesLiveData = new MutableLiveData<>();
@@ -109,14 +113,21 @@ public class    ActivitiesCoordinator {
 
         chatService = new ChatService(host, context);
 
-        currentUser = User.newBuilder().setName(username).setPassword(password).setIsGuest(isGuest).build();
+        if (isGuest) {
+            currentUser = User.newBuilder().setName(username).setPassword(password).setIsGuest(isGuest).build();
+            Log.d(TAG, "Set user id: " + currentUser.getId());
+        } else {
+            currentUser = User.newBuilder().setName(username).setPassword(password).setIsGuest(isGuest).build();
+        }
+
         chatService.getChat(currentUser, new StreamObserver<Chat>() {
             @Override
             public void onNext(Chat value) {
                 messagesLiveData.postValue(new ArrayList<>(value.getMessagesList()));
-                Intent intentToStartChatActivity = new Intent(context, ChatActivity.class);
-                intentToStartChatActivity.putExtra("USER_NAME", currentUser.getName());
-                context.startActivity(intentToStartChatActivity);
+                currentUser = value.getCurrentUser();
+                Log.d(TAG, "Returned user: " + currentUser.toString());
+
+                EventBus.getDefault().post(new GetChatSuccessfullyEvent());
 
                 chatService.observeMessages(currentUser, messageStreamObserver);
                 chatService.observeUsers(currentUser, usersStreamObserver);
@@ -184,5 +195,11 @@ public class    ActivitiesCoordinator {
                             Observer<List<User>> usersObserver) {
         usersLiveData.observe(lifecycleOwner, usersObserver);
         messagesLiveData.observe(lifecycleOwner, messagesObserver);
+    }
+
+    private int setUserId() {
+        int upperRange = 1000000;
+        Random random = new Random();
+        return random.nextInt(upperRange);
     }
 }

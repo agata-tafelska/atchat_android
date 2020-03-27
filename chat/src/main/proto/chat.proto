@@ -7,9 +7,10 @@ option java_outer_classname = "ChatProto";
 package chat;
 
 message User {
-    string name = 1;
-    string password = 2;
-    bool isGuest = 3;
+    string id = 1;
+    string name = 2;
+    string password = 3;
+    bool isGuest = 4;
 }
 
 message Message {
@@ -21,6 +22,7 @@ message Message {
 message Chat {
     repeated Message messages = 1;
     repeated User user = 2;
+    User currentUser = 3;
 }
 
 message CurrentUsers {

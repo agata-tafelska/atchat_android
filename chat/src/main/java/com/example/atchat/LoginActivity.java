@@ -2,8 +2,6 @@ package com.example.atchat;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -112,25 +110,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private TextWatcher loginTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            String hostString = editTextHost.getText().toString().trim();
-            String usernameString = editTextUsername.getText().toString().trim();
-            buttonJoinChat.setEnabled(!hostString.isEmpty() && !usernameString.isEmpty());
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
-
     private void showLoading() {
         progressBar.setVisibility(View.VISIBLE);
         editTextHost.setVisibility(View.INVISIBLE);
@@ -139,11 +118,13 @@ public class LoginActivity extends AppCompatActivity {
         buttonJoinChat.setVisibility(View.INVISIBLE);
         textViewCreateAccount.setVisibility(View.INVISIBLE);
         textViewCreateAccount1.setVisibility(View.INVISIBLE);
+        textViewErrorMessage.setVisibility(View.INVISIBLE);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onErrorEvent(ErrorEvent event) {
-        showErrorMessage(event.errorType.messageResourceId);
+    public void onGetChatSuccessfullyEvent(GetChatSuccessfullyEvent event) {
+        Intent intentToStartChatActivity = new Intent(this, ChatActivity.class);
+        startActivityForResult(intentToStartChatActivity, 2);
     }
 
     @Override

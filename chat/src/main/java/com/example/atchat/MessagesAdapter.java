@@ -20,9 +20,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     private static int TYPE_MY_USER = 1;
     private static int TYPE_OTHER_USERS = 2;
 
-    private String loggedUser;
+    private User loggedUser;
 
-    public MessagesAdapter(String loggedUser) {
+    public MessagesAdapter(User loggedUser) {
         this.loggedUser = loggedUser;
     }
 
@@ -51,7 +51,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public int getItemViewType(int position) {
         Log.d(TAG, "Logged user name: " + loggedUser);
-        if (chatMessages.get(position).getUser().equals("~" + loggedUser)) {
+        if (chatMessages.get(position).getUserId().equals(loggedUser.getId())) {
             Log.d(TAG, "getItemViewType: TYPE_MY_USER");
             return TYPE_MY_USER;
         } else {
@@ -82,11 +82,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull MessagesAdapter.ViewHolder holder, int position) {
         String messageDate = chatMessages.get(position).getDate();
-        String messageUser = chatMessages.get(position).getUser();
+        String messageUser = chatMessages.get(position).getUserName();
         String messageText = chatMessages.get(position).getMessage();
-        if (messageUser.equals("guest")) {
-            holder.userTextView.setTypeface(null, Typeface.NORMAL);
-        }
         holder.dateTextView.setText(messageDate);
         holder.userTextView.setText(messageUser);
         holder.messageTextView.setText(messageText);

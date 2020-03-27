@@ -59,7 +59,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:background="@drawable/join_chat_button"
-        android:enabled="false"
         android:paddingStart="18dp"
         android:paddingEnd="18dp"
         android:text="@string/action_sign_in"
