@@ -145,7 +145,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void updateMessages(List<Message> messages) {
-        adapter.setMessages(createMessageToDisplay(messages));
+        adapter.setMessages(createMessagesToDisplay(messages));
         int itemCount = adapter.getItemCount();
         recyclerView.scrollToPosition(itemCount - 1);
     }
@@ -159,7 +159,7 @@ public class ChatActivity extends AppCompatActivity {
         finish();
     }
 
-    private List<MessageText> createMessageToDisplay(List<Message> messages) {
+    private List<MessageText> createMessagesToDisplay(List<Message> messages) {
         List<MessageText> messagesListToDisplay = new ArrayList<>();
         if (messages != null) {
             for (Message message : messages) {
