@@ -28,6 +28,10 @@ AtChat Android application is another type of client for ATChat grpc server. Pro
 
 ### Screenshots
 
-| Main chat screen | Join as guest screen | Register screen | Login screen | Chat screen |
-| --- | --- | --- | --- | --- |
-|![](screenshots/device-2020-04-04-main_screen.png)|![](screenshots/device-2020-04-04-join_as_guest_screen.png)|![](screenshots/device-2020-04-04-register_screen.png)|![](screenshots/device-2020-04-04-login_screen.png)|![](screenshots/device-2020-04-04-conversation.png)|
+| Main chat screen | Join as guest screen | Register screen |
+| --- | --- | --- |
+|![](screenshots/device-2020-04-04-main_screen.png)|![](screenshots/device-2020-04-04-join_as_guest_screen.png)|![](screenshots/device-2020-04-04-register_screen.png)|
+
+| Login screen | Chat screen | Users bottom sheet |
+| --- | --- | --- |
+![](screenshots/device-2020-04-04-login_screen.png)|![](screenshots/device-2020-04-04-conversation.png)|![](screenshots/device-2020-04-04-users_list.png)|
