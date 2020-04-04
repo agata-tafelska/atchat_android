@@ -25,3 +25,5 @@ AtChat Android application is another type of client for ATChat grpc server. Pro
 **4. ActivitiesCoordinator** - holds an instance of ChatService that enables to send requests to the server
 * coordinates switching between different activities
 * holds LiveData instances observed by ChatActivity
+
+### Screenshots
