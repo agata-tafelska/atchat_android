@@ -22,6 +22,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         signInButton = findViewById(R.id.sign_in_button);
         joinAsGuestButton = findViewById(R.id.join_as_guest_button);
         textViewCreateAccount = findViewById(R.id.create_account_link);
