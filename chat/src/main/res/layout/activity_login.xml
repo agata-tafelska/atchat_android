@@ -92,20 +92,6 @@
         app:layout_constraintTop_toBottomOf="@+id/password"
         tools:text="Error message" />
 
-    <TextView
-        android:id="@+id/success_message"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="32dp"
-        android:text="@string/successfully_created_account_message"
-        android:textColor="@color/successColor"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
-
     <ImageView
         android:id="@+id/logo_image_view"
         android:layout_width="170dp"

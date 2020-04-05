@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.atchat.Events.ErrorEvent;
+import com.example.atchat.Events.RegisterSuccessfullyEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -127,6 +128,13 @@ public class RegisterActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onErrorEvent(ErrorEvent event) {
         showErrorMessage(event.errorType.messageResourceId);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRegisterSuccessfullyEvent(RegisterSuccessfullyEvent event) {
+        Toast.makeText(this, R.string.account_created_toast_message, Toast.LENGTH_LONG).show();
+        Intent intentToStartLoginActivity = new Intent(this, LoginActivity.class);
+        startActivity(intentToStartLoginActivity);
     }
 
     private void showErrorMessage(int stringResourceId) {

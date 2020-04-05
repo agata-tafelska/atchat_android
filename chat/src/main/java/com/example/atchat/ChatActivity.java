@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.atchat.Events.ConnectionLostEvent;
+import com.example.atchat.Events.LogOutEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -113,6 +115,10 @@ public class ChatActivity extends AppCompatActivity {
             return true;
         }
 
+        if (id == R.id.logout) {
+            coordinator.logout();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -157,6 +163,13 @@ public class ChatActivity extends AppCompatActivity {
         returnIntent.putExtra("ERROR_MESSAGE", event.message);
         setResult(2, returnIntent);
         finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogOutEvent(LogOutEvent event) {
+        Log.d(TAG, "Log out");
+        finish();
+        Toast.makeText(this, R.string.log_out_toast_message, Toast.LENGTH_LONG).show();
     }
 
     private List<MessageText> createMessagesToDisplay(List<Message> messages) {

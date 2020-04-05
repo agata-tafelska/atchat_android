@@ -34,6 +34,8 @@
     <string name="incorrect_host_toast_message">Incorrect host. Please try again.</string>
     <string name="incorrect_username_toast_message">Username must contain at least 3 characters including upper- and lowercase, numbers and \".\", \"-\", \"_\".</string>
     <string name="incorrect_password_toast_message">Password must have at least 8 characters and maximum of 20 characters.</string>
+    <string name="account_created_toast_message">Account successfully created</string>
+    <string name="log_out_toast_message">You have successfully logged out</string>
 
     <!-- Error messages -->
     <string name="incorrect_credentials_message">Incorrect username or password. Please try again.</string>

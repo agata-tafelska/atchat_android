@@ -1,7 +1,6 @@
 package com.example.atchat;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 
 
@@ -12,23 +11,26 @@ import androidx.lifecycle.Observer;
 import com.example.atchat.Events.ConnectionLostEvent;
 import com.example.atchat.Events.ErrorEvent;
 import com.example.atchat.Events.GetChatSuccessfullyEvent;
+import com.example.atchat.Events.LogOutEvent;
+import com.example.atchat.Events.RegisterSuccessfullyEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import io.grpc.StatusRuntimeException;
 import io.grpc.stub.StreamObserver;
 
-public class    ActivitiesCoordinator {
+public class ActivitiesCoordinator {
 
     private static final String TAG = ActivitiesCoordinator.class.getSimpleName();
 
     private static ActivitiesCoordinator instance = new ActivitiesCoordinator();
+
     private ActivitiesCoordinator() {
     }
+
     public static ActivitiesCoordinator getInstance() {
         return instance;
     }
@@ -84,8 +86,7 @@ public class    ActivitiesCoordinator {
             @Override
             public void onNext(User value) {
 
-                Intent intentToStartLoginActivity = new Intent(context, LoginActivity.class);
-                context.startActivity(intentToStartLoginActivity);
+                EventBus.getDefault().post(new RegisterSuccessfullyEvent());
             }
 
             @Override
@@ -144,16 +145,16 @@ public class    ActivitiesCoordinator {
                     switch (exception.getStatus().getCode()) {
                         case UNAVAILABLE:
                             EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAVAILABLE));
-                            Log.d(TAG, "joinChat() -> onError() called, UNAVAILABLE error returned." );
+                            Log.d(TAG, "joinChat() -> onError() called, UNAVAILABLE error returned.");
                             return;
                         case UNAUTHENTICATED:
                             EventBus.getDefault().post(new ErrorEvent(ErrorType.UNAUTHENTICATED));
-                            Log.d(TAG, "joinChat() -> onError() called, UNAUTHENTICATED error returned." );
+                            Log.d(TAG, "joinChat() -> onError() called, UNAUTHENTICATED error returned.");
                             return;
                     }
                 }
                 EventBus.getDefault().post(new ErrorEvent(ErrorType.UNKNOWN));
-                Log.d(TAG, "joinChat() -> onError() called, UNKNOWN error returned." );
+                Log.d(TAG, "joinChat() -> onError() called, UNKNOWN error returned.");
             }
 
             @Override
@@ -179,7 +180,7 @@ public class    ActivitiesCoordinator {
 
             @Override
             public void onError(Throwable throwable) {
-               Log.d(TAG, "Unable to send message. Reason: " + throwable.getMessage());
+                Log.d(TAG, "Unable to send message. Reason: " + throwable.getMessage());
             }
 
             @Override
@@ -197,9 +198,24 @@ public class    ActivitiesCoordinator {
         messagesLiveData.observe(lifecycleOwner, messagesObserver);
     }
 
-    private int setUserId() {
-        int upperRange = 1000000;
-        Random random = new Random();
-        return random.nextInt(upperRange);
+    public void logout() {
+        chatService.unsubscribe(currentUser, new StreamObserver<User>() {
+            @Override
+            public void onNext(User value) {
+                Log.d(TAG, "Logout performed successfully");
+                EventBus.getDefault().post(new LogOutEvent());
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                Log.d(TAG, "Error during logout. Reason: " + t.getMessage());
+            }
+
+            @Override
+            public void onCompleted() {
+                // Do nothing
+            }
+        });
+
     }
 }
