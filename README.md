@@ -1,11 +1,8 @@
 # ATChat Android
-Simple chat application designed to communicate between users by sending text messages. Implemented using gRPC framework for Android devices.
+Simple chat application designed to communicate between users by sending text messages. This application, implemented using gRPC framework, is another type of client for ATChat gRPC server. Project where server and desktop client are implemented can be found [here](https://github.com/agata-tafelska/chat-grpc)..
 
 ## Motivation
 Project is my first Android application created for getting to know the features of Android framework and practicing Java coding skills as well.
-
-## Overview
-AtChat Android application is another type of client for ATChat grpc server. Project where server and desktop client are implemented can be found [here](https://github.com/agata-tafelska/chat-grpc).
 
 ## Requirements
 * Android >= 5.0 (API level 21)
@@ -23,6 +20,7 @@ https://github.com/agata-tafelska/atchat_android.git
 or download [master branch latest archive](https://github.com/agata-tafelska/atchat_android/archive/master.zip).  
 Then open/import the project in Android Studio and build it.
 
+## Overview  
 ### Structure:
 **1. Protofile** - file containing app's service definition
 * specifies chat's models and methods for communication between client and server
