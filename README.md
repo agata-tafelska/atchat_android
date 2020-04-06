@@ -35,3 +35,19 @@ AtChat Android application is another type of client for ATChat grpc server. Pro
 | Login screen | Chat screen | Users bottom sheet |
 | --- | --- | --- |
 ![](screenshots/device-2020-04-04-login_screen.png)|![](screenshots/device-2020-04-04-conversation.png)|![](screenshots/device-2020-04-04-users_list.png)|
+
+## Requirements
+* Android >= 5.0 (API level 21)
+* [Server requirements](https://github.com/agata-tafelska/chat-grpc#requirements-1) 
+
+## Install
+* [APK](https://github.com/agata-tafelska/atchat_android/releases/download/1.0/chat-debug.apk) direkt download
+* [Server releases](https://github.com/agata-tafelska/chat-grpc/releases)
+
+## Build
+If you want to build this app yourself, clone this repository:
+```
+https://github.com/agata-tafelska/atchat_android.git
+```
+or download [master branch latest archive](https://github.com/agata-tafelska/atchat_android/archive/master.zip).  
+Then open/import the project in Android Studio and build it.
