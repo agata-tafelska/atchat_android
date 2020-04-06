@@ -1,5 +1,5 @@
 # ATChat Android
-Simple chat application designed to communicate between users by sending text messages. This application, implemented using gRPC framework, is another type of client for ATChat gRPC server. Project where server and desktop client are implemented can be found [here](https://github.com/agata-tafelska/chat-grpc)..
+Simple chat application designed to communicate between users by sending text messages. This application, implemented using gRPC framework, is another type of client for ATChat gRPC server. Project where server and desktop client are implemented can be found [here](https://github.com/agata-tafelska/chat-grpc).
 
 ## Motivation
 Project is my first Android application created for getting to know the features of Android framework and practicing Java coding skills as well.
